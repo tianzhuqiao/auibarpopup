@@ -5,6 +5,41 @@ from auibarpopup import *
 
 ID_TOOL_START = wx.ID_HIGHEST + 1
 
+class MyPanel(wx.Panel):
+    def __init__(self, parent, *args, **kwargs):
+        wx.Panel.__init__(self, parent, *args, **kwargs)
+        self.toolbarart = AuiToolBarPopupArt(self)
+        sizer = wx.BoxSizer(wx.VERTICAL)
+        tb = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
+                            agwStyle=aui.AUI_TB_OVERFLOW|aui.AUI_TB_TEXT|
+                            aui.AUI_TB_HORZ_TEXT|aui.AUI_TB_PLAIN_BACKGROUND)
+        tb.SetToolBitmapSize(wx.Size(16, 16))
+        tb_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
+        tb.AddSimpleTool(ID_TOOL_START+200, "Item 1", tb_bmp1)
+        tb.AddCheckTool(ID_TOOL_START+201, "Toggle", tb_bmp1, wx.NullBitmap)
+        tb.AddRadioTool(ID_TOOL_START+202, "Radio 0", tb_bmp1, wx.NullBitmap)
+        tb.AddRadioTool(ID_TOOL_START+203, "Radio 1", tb_bmp1, wx.NullBitmap)
+        tb.AddSeparator()
+        tb.AddSimpleTool(ID_TOOL_START+204, "Item 5", tb_bmp1)
+        tb.AddSimpleTool(ID_TOOL_START+205, "Item 6", tb_bmp1)
+        tb.AddSimpleTool(ID_TOOL_START+206, "Item 7", tb_bmp1)
+        tb.AddSimpleTool(ID_TOOL_START+207, "Item 8", tb_bmp1)
+        tb.SetArtProvider(self.toolbarart)
+        tb.Realize()
+        sizer.Add(tb, 0, wx.EXPAND)
+        ns = {}
+        ns['wx'] = wx
+        ns['app'] = wx.GetApp()
+        ns['frame'] = parent
+        shell = py.shell.Shell(self, -1, locals=ns)
+        sizer.Add(shell, 1, wx.EXPAND)
+        self.SetSizer(sizer)
+
+        self.Bind(wx.EVT_TOOL, self.OnTool)
+
+    def OnTool(self, event):
+        print('ID %d called in panel'%(event.GetId()))
+
 class MainFrame(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, -1, 'AuiToolBarPopup Demo', size=(300, 432))
@@ -13,12 +48,8 @@ class MainFrame(wx.Frame):
         # tell AuiManager to manage this frame
         self._mgr.SetManagedWindow(self)
         self.toolbarart = AuiToolBarPopupArt(self)
-        ns = {}
-        ns['wx'] = wx
-        ns['app'] = wx.GetApp()
-        ns['frame'] = self
-        self.panel = py.shell.Shell(self, -1, locals=ns)
-        self._mgr.AddPane(self.panel, aui.AuiPaneInfo().Name("test1").
+
+        self._mgr.AddPane(MyPanel(self), aui.AuiPaneInfo().Name("test1").
                           Caption("Pane Caption").CenterPane())
 
         tb = aui.AuiToolBar(self, -1, wx.DefaultPosition, wx.DefaultSize,
@@ -28,6 +59,7 @@ class MainFrame(wx.Frame):
         tb_bmp1 = wx.ArtProvider.GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, wx.Size(16, 16))
         tb.AddSimpleTool(ID_TOOL_START+0, "Item 1", tb_bmp1)
         tb.AddCheckTool(ID_TOOL_START+1, "Toggle", tb_bmp1, wx.NullBitmap)
+        tb.AddSeparator()
         tb.AddRadioTool(ID_TOOL_START+2, "Radio 0", tb_bmp1, wx.NullBitmap)
         tb.AddRadioTool(ID_TOOL_START+3, "Radio 1", tb_bmp1, wx.NullBitmap)
         tb.AddSeparator()
