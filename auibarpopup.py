@@ -32,9 +32,25 @@ class AuiToolBarPopup(wx.Frame):
         event.Skip()
 
     def Cancel(self):
+        realize = False
         for item in self.tb._items:
             if item.GetKind() == aui.ITEM_CONTROL:
                 item.window.Reparent(self._toolbar)
+                realize = True
+        if realize:
+            # add controls back to the original toolbar, so realize it;
+            # however, the client size will set to be the min size (of all
+            # items); call SetClientSize() does not work since it will trigger
+            # OnSize, which call Realize() again and set the client size to min
+            # size again... The following "workaround" seems working
+            sz = self._toolbar.GetClientSize()
+            self._toolbar.Realize()
+            if self._toolbar.GetAuiManager():
+                self._toolbar.GetAuiManager().Update()
+            self._toolbar.SetClientSize(sz)
+        # refresh the toolbar; otherwise, the status of the radio buttons may
+        # not be correct.
+        self._toolbar.Refresh()
         self.tb.ClearTools()
         wx.CallAfter(self.Hide)
 
