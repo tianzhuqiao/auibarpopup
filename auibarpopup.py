@@ -35,6 +35,9 @@ class AuiToolBarPopup(wx.Frame):
         realize = False
         for item in self.tb._items:
             if item.GetKind() == aui.ITEM_CONTROL:
+                origin_item = self._toolbar.FindTool(item.window.GetId())
+                if origin_item.sizer_item and not origin_item.sizer_item.IsShown():
+                    item.window.Show(False)
                 item.window.Reparent(self._toolbar)
                 realize = True
         if realize:
@@ -75,6 +78,8 @@ class AuiToolBarPopup(wx.Frame):
                     tool = self.tb.AddSeparator()
             elif item.GetKind() == aui.ITEM_CONTROL:
                 item.window.Reparent(self.tb)
+                if not item.window.IsShown():
+                    item.window.Show(True)
                 tool = self.tb.AddControl(item.window, item.GetLabel())
             elif item.GetKind() == aui.ITEM_CHECK:
                 tool = self.tb.AddCheckTool(item.GetId(), item.GetLabel(),
