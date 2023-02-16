@@ -55,7 +55,7 @@ class AuiToolBarPopup(wx.Frame):
         # not be correct.
         self._toolbar.Refresh()
         self.tb.ClearTools()
-        wx.CallAfter(self.Hide)
+        self.Hide()
 
     def UpdateItems(self, wnd, items):
         items_added = 0
