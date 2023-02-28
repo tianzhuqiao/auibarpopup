@@ -1,5 +1,5 @@
 import wx
-import wx.lib.agw.aui as aui
+from wx.lib.agw import aui
 
 class AuiToolBarPopup(wx.Frame):
     def __init__(self, parent):
@@ -92,8 +92,8 @@ class AuiToolBarPopup(wx.Frame):
                 if item.state & aui.AUI_BUTTON_STATE_CHECKED:
                     tool.state |= aui.AUI_BUTTON_STATE_CHECKED
             elif item.GetKind() == aui.ITEM_NORMAL:
-                tool = self.tb.AddSimpleTool(item.GetId(), item.GetLabel(),
-                                             item.GetBitmap())
+                tool = self.tb.AddTool(item.GetId(), item.GetLabel(),
+                                       item.GetBitmap(), item.GetDisabledBitmap(), aui.ITEM_NORMAL)
                 self.tb.SetToolDropDown(tool.GetId(), wnd.GetToolDropDown(tool.GetId()))
             if tool:
                 tool.SetAlignment(wx.EXPAND)
