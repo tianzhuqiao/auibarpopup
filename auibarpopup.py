@@ -1,5 +1,5 @@
 import wx
-from wx.lib.agw import aui
+from bsmedit.aui import aui
 
 class AuiToolBarPopup(wx.Frame):
     def __init__(self, parent):
