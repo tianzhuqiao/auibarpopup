@@ -126,4 +126,4 @@ class AuiToolBarPopupArt(aui.AuiDefaultToolBarArt):
         self.popup.UpdateItems(wnd, items)
         self.popup.Show()
         self.popup.Raise()
-        return -1
+        return None
