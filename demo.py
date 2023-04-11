@@ -1,6 +1,6 @@
 import wx
-import wx.lib.agw.aui as aui
 import wx.py as py
+from bsmedit.aui import aui
 from auibarpopup import *
 
 ID_TOOL_START = wx.ID_HIGHEST + 1
